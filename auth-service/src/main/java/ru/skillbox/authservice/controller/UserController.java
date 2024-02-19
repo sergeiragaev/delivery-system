@@ -10,7 +10,7 @@ import ru.skillbox.authservice.dto.UserDto;
 import ru.skillbox.authservice.domain.User;
 import ru.skillbox.authservice.repository.UserRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController

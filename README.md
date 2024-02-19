@@ -42,7 +42,7 @@ You can use those curl commands, or you can do all that with Swagger UI
 To create user use this request to auth service 
 ```bash
 curl -X 'POST' \
-  'http://localhost:8083/auth/user/signup' \
+  'http://localhost:9090/auth/user/signup' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -54,7 +54,7 @@ curl -X 'POST' \
 After that you can get a token
 ```bash
 curl -X 'POST' \
-  'http://localhost:8083/auth/token/generate' \
+  'http://localhost:9090/auth/token/generate' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
