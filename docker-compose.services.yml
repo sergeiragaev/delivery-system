@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3'
 services:
   discovery:
     image: delivery/discovery:0.0.1-SNAPSHOT

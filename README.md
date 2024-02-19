@@ -54,7 +54,7 @@ curl -X 'POST' \
 After that you can get a token
 ```bash
 curl -X 'POST' \
-  'http://localhost:8083/auth/auth/token/generate' \
+  'http://localhost:8083/auth/token/generate' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
