@@ -11,10 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Mono;
 import ru.skillbox.orderservice.domain.Order;
-import ru.skillbox.orderservice.domain.OrderDto;
-import ru.skillbox.orderservice.domain.OrderStatus;
-import ru.skillbox.orderservice.domain.StatusDto;
+import ru.skillbox.orderservice.domain.dto.OrderDto;
+import ru.skillbox.orderservice.domain.enums.OrderStatus;
+import ru.skillbox.orderservice.domain.dto.StatusDto;
 import ru.skillbox.orderservice.repository.OrderRepository;
 import ru.skillbox.orderservice.service.OrderService;
 
@@ -72,6 +73,8 @@ public class OrderControllerTest {
                 OrderStatus.REGISTERED
         );
         orders = Collections.singletonList(order);
+
+
     }
 
     @Test
@@ -98,7 +101,7 @@ public class OrderControllerTest {
                 "Moscow, st.Dubininskaya 39",
                 2450L
         );
-        Mockito.when(orderService.addOrder(orderDto)).thenReturn(Optional.of(newOrder));
+        Mockito.when(orderService.addOrder(orderDto, 1L)).thenReturn(Mono.just(newOrder));
         mvc.perform(
                         post("/order")
                                 .accept(MediaType.APPLICATION_JSON)

@@ -1,0 +1,41 @@
+server:
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: payment-service
+  profiles:
+    active: local
+  cloud:
+    config:
+      uri: ${CONFIG_URI:http://localhost:8761}
+      fail-fast: true
+    stream:
+      function:
+        definition: orderEventProcessor;paymentEventSubscriber
+      bindings:
+        orderEventProcessor-in-0:
+          destination: orders
+        orderEventProcessor-out-0:
+          destination: payments
+        paymentEventSubscriber-in-0:
+          destination: payments
+        paymentEventSubscriber-out-0:
+          destination: transactions
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+springdoc:
+  api-docs:
+    path: /payment/v3/api-docs
+
+# could be used for debugging
+#logging:
+#  level:
+#    org:
+#      springframework: TRACE

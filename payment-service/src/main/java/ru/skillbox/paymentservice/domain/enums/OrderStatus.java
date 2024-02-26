@@ -1,4 +1,4 @@
-package ru.skillbox.orderservice.domain;
+package ru.skillbox.paymentservice.domain.enums;
 
 public enum OrderStatus {
     REGISTERED,

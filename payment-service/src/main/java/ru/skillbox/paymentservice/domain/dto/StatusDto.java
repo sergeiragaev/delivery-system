@@ -1,8 +1,10 @@
-package ru.skillbox.orderservice.domain;
+package ru.skillbox.paymentservice.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.paymentservice.domain.enums.OrderStatus;
+import ru.skillbox.paymentservice.domain.ServiceName;
 
 @Data
 @AllArgsConstructor

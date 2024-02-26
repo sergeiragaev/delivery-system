@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
+import ru.skillbox.orderservice.domain.enums.OrderStatus;
+
 import java.time.LocalDateTime;
 
 /**

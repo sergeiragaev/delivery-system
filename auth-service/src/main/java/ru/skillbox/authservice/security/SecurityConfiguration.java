@@ -47,8 +47,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth -> auth.requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/**","/swagger-ui.html", "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/signup").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/token/generate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/signup", "/token/generate").permitAll()
                         .anyRequest().authenticated()
                 )).exceptionHandling(configurer -> configurer.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)

@@ -1,13 +1,13 @@
 version: '3'
 services:
   discovery:
-    image: delivery/discovery:0.0.1-SNAPSHOT
+    image: delivery/discovery:latest
     ports:
       - "8761:8761"
     restart: always
 
   auth-service:
-    image: delivery/auth-service:0.0.1-SNAPSHOT
+    image: delivery/auth-service:latest
     ports:
       - "8083:8083"
     environment:
@@ -21,7 +21,7 @@ services:
       - discovery
 
   order-service:
-    image: delivery/order:0.0.1-SNAPSHOT
+    image: delivery/order-service:latest
     ports:
       - "8080:8080"
     environment:
@@ -34,8 +34,23 @@ services:
     depends_on:
       - discovery
 
+  payment-service:
+    image: delivery/payment-service:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://psql:5432/payment_db
+      - DATABASE_USER=postgre_user
+      - DATABASE_PASSWORD=postgre_secret_password
+    restart: always
+    depends_on:
+      - discovery
+
+
   gateway:
-    image: delivery/gateway:0.0.1-SNAPSHOT
+    image: delivery/gateway:latest
     ports:
       - "9090:9090"
     environment:
@@ -46,3 +61,4 @@ services:
       - discovery
       - auth-service
       - order-service
+      - payment-service

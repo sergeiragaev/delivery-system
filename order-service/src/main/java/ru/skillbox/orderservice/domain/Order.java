@@ -1,5 +1,6 @@
 package ru.skillbox.orderservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,8 +8,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
+import ru.skillbox.orderservice.domain.enums.OrderStatus;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @NoArgsConstructor
@@ -54,6 +58,14 @@ public class Order {
     )
     private List<OrderStatusHistory> orderStatusHistory = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<OrderProduct> products = new ArrayList<>();
+
     public Order(
             String departureAddress,
             String destinationAddress,
@@ -71,4 +83,13 @@ public class Order {
     public void addStatusHistory(OrderStatus status, ServiceName serviceName, String comment) {
         getOrderStatusHistory().add(new OrderStatusHistory(null, status, serviceName, comment, this));
     }
+
+    public void addProducts(List<OrderProduct> productsFromInput) {
+        List<OrderProduct> productDetailList = new ArrayList<>();
+        productsFromInput.forEach(product ->
+                productDetailList.add(new OrderProduct(null, product.getProductId(), product.getCount(), this)));
+
+        getProducts().addAll(productDetailList);
+    }
+
 }
