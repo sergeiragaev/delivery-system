@@ -3,7 +3,7 @@ server:
     context-path: /api
 spring:
   application:
-    name: payment-service
+    name: inventory-service
   profiles:
     active: local
   cloud:
@@ -12,14 +12,16 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: orderEventProcessor;inventoryEventProcessor
+        definition: orderEventProcessor;paymentEventSubscriber
       bindings:
         orderEventProcessor-in-0:
-          destination: orders
-        orderEventProcessor-out-0:
           destination: payments
-        inventoryEventProcessor-in-0:
+        orderEventProcessor-out-0:
           destination: invents
+#        paymentEventSubscriber-in-0:
+#          destination: payments
+#        paymentEventSubscriber-out-0:
+#          destination: transactions
 
 eureka:
   client:
@@ -31,7 +33,6 @@ eureka:
 springdoc:
   api-docs:
     path: /payment/v3/api-docs
-
 # could be used for debugging
 #logging:
 #  level:

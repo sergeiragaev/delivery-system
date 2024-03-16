@@ -1,8 +1,8 @@
-package ru.skillbox.paymentservice.domain.model;
+package ru.skillbox.inventoryservice.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.skillbox.paymentservice.domain.enums.OrderStatus;
+import ru.skillbox.inventoryservice.domain.enums.OrderStatus;
 
 
 @ToString
