@@ -12,11 +12,15 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: orderEventProcessor;paymentEventSubscriber
+        definition: orderPaidEventProcessor;orderDeliveredEventProcessor
       bindings:
-        orderEventProcessor-in-0:
+        orderPaidEventProcessor-in-0:
           destination: payments
-        orderEventProcessor-out-0:
+        orderPaidEventProcessor-out-0:
+          destination: invents
+        orderDeliveredEventProcessor-in-0:
+          destination: delivers
+        orderDeliveredEventProcessor-out-0:
           destination: invents
 #        paymentEventSubscriber-in-0:
 #          destination: payments
@@ -32,7 +36,7 @@ eureka:
 
 springdoc:
   api-docs:
-    path: /payment/v3/api-docs
+    path: /inventory/v3/api-docs
 # could be used for debugging
 #logging:
 #  level:

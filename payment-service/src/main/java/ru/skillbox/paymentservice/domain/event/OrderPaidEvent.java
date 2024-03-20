@@ -19,6 +19,7 @@ public class OrderPaidEvent implements Event {
 
     private long orderId;
     private long userId;
+    private long cost;
     private OrderStatus status;
     private List<OrderProduct> products;
     private String destinationAddress;

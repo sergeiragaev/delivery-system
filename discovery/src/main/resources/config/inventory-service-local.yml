@@ -1,12 +1,16 @@
 spring:
   cloud:
     function:
-      definition: orderEventProcessor;paymentEventSubscriber
-    bindings:
-      orderEventProcessor-in-0:
-        destination: payments
-      orderEventProcessor-out-0:
-        destination: invents
+      definition: orderPaidEventProcessor;orderDeliveredEventProcessor
+      bindings:
+        orderPaidEventProcessor-in-0:
+          destination: payments
+        orderPaidEventProcessor-out-0:
+          destination: invents
+        orderDeliveredEventProcessor-in-0:
+          destination: delivers
+        orderDeliveredEventProcessor-out-0:
+          destination: invents
 #      paymentEventSubscriber-in-0:
 #        destination: payments
 #      paymentEventSubscriber-out-0:
@@ -43,6 +47,8 @@ management:
       show-details: always
     metrics:
       enabled: true
+
+order-service-url: http://localhost:9090/api/order
 
 eureka:
   client:

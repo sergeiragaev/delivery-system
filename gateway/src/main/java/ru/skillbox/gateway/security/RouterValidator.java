@@ -13,7 +13,9 @@ public class RouterValidator {
             Pattern.compile("/auth/token/generate"),
             Pattern.compile("/auth/v3/api-docs.*"),
             Pattern.compile("/api/order/v3/api-docs.*"),
-            Pattern.compile("/api/payment/v3/api-docs.*")
+            Pattern.compile("/api/payment/v3/api-docs.*"),
+            Pattern.compile("/api/inventory/v3/api-docs.*"),
+            Pattern.compile("/api/delivery/v3/api-docs.*")
     );
 
     public static final Predicate<ServerHttpRequest> isSecured =

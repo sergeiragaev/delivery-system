@@ -49,7 +49,7 @@ public class InventoryService {
     }
 
     @Transactional
-    public void inventOrder(OrderInventedEvent event) {
+    public String inventOrder(OrderInventedEvent event) {
         try {
             for (OrderProduct orderProduct : event.getProducts()) {
                 long productId = orderProduct.getProductId();
@@ -57,10 +57,12 @@ public class InventoryService {
                         .orElseThrow(() -> new InventoryNotFoundException("Product with ID: " + productId + " has not found!"));
                 deductCount(product, orderProduct.getCount());
             }
+            return "Order invented successfully";
         } catch (Exception e) {
             log.error(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             event.setStatus(OrderStatus.INVENTMENT_FAILED);
+            return e.getMessage();
         }
     }
 
@@ -72,5 +74,16 @@ public class InventoryService {
         } else {
             throw new NotEnoughInventoryException("Count of product with ID: " + product.getProductId() + " is not enough!");
         }
+    }
+
+    public void returnOrderToInvent(OrderInventedEvent inventedEvent) {
+        List<ProductDto> productDtoList = new ArrayList<>();
+        for (OrderProduct product : inventedEvent.getProducts()) {
+            ProductDto productDto = new ProductDto();
+            productDto.setProductId(product.getProductId());
+            productDto.setCount(product.getCount());
+            productDtoList.add(productDto);
+        }
+        addProducts(productDtoList);
     }
 }
