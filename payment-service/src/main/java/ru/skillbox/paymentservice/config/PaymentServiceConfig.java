@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.skillbox.paymentservice.consumer.EventConsumer;
 import ru.skillbox.paymentservice.domain.event.OrderCreatedEvent;
-import ru.skillbox.paymentservice.domain.event.OrderPaidEvent;
-import ru.skillbox.paymentservice.domain.event.OrderInventEvent;
+import ru.skillbox.paymentservice.domain.event.PaymentEvent;
+import ru.skillbox.paymentservice.domain.event.TransactionEvent;
 import ru.skillbox.paymentservice.handler.EventHandler;
 
 import java.util.function.Consumer;
@@ -14,24 +14,32 @@ import java.util.function.Function;
 
 @Configuration
 public class PaymentServiceConfig {
-    private final EventHandler<OrderCreatedEvent, OrderPaidEvent> orderCreatedEventHandler;
-    private final EventConsumer<OrderInventEvent> inventoryEventConsumer;
+    private final EventHandler<OrderCreatedEvent, PaymentEvent> orderCreatedEventHandler;
+    private final EventHandler<PaymentEvent, TransactionEvent> paymentEventHandler;
+    private final EventConsumer<TransactionEvent> transactionEventConsumer;
 
     @Autowired
     public PaymentServiceConfig(
-            EventHandler<OrderCreatedEvent, OrderPaidEvent> orderCreatedEventHandler,
-            EventConsumer<OrderInventEvent> inventoryEventConsumer) {
+            EventHandler<OrderCreatedEvent, PaymentEvent> orderCreatedEventHandler,
+            EventConsumer<TransactionEvent> transactionEventConsumer,
+            EventHandler<PaymentEvent, TransactionEvent> paymentEventHandler) {
         this.orderCreatedEventHandler = orderCreatedEventHandler;
-        this.inventoryEventConsumer = inventoryEventConsumer;
+        this.transactionEventConsumer = transactionEventConsumer;
+        this.paymentEventHandler = paymentEventHandler;
     }
 
     @Bean
-    public Function<OrderCreatedEvent, OrderPaidEvent> orderEventProcessor() {
+    public Function<OrderCreatedEvent, PaymentEvent> orderEventProcessor() {
         return orderCreatedEventHandler::handleEvent;
     }
     @Bean
-    public Consumer<OrderInventEvent> inventoryEventProcessor() {
-        return inventoryEventConsumer::consumeEvent;
+    public Function<PaymentEvent, TransactionEvent> paymentEventSubscriber() {
+        return paymentEventHandler::handleEvent;
+    }
+
+    @Bean
+    public Consumer<TransactionEvent> transactionEventSubscriber() {
+        return transactionEventConsumer::consumeEvent;
     }
 
 }

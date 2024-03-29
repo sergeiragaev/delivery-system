@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import ru.skillbox.orderservice.consumer.EventConsumer;
-import ru.skillbox.orderservice.domain.OrderCreatedEvent;
-import ru.skillbox.orderservice.domain.TransactionEvent;
+import ru.skillbox.orderservice.domain.event.OrderCreatedEvent;
+import ru.skillbox.orderservice.domain.event.TransactionEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

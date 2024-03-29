@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.paymentservice.domain.ServiceName;
 import ru.skillbox.paymentservice.domain.dto.StatusDto;
 import ru.skillbox.paymentservice.domain.event.OrderCreatedEvent;
-import ru.skillbox.paymentservice.domain.event.OrderPaidEvent;
+import ru.skillbox.paymentservice.domain.event.PaymentEvent;
 import ru.skillbox.paymentservice.service.PaymentService;
 import ru.skillbox.paymentservice.service.RequestSendingService;
 
 import static ru.skillbox.paymentservice.domain.enums.OrderStatus.PAYMENT_FAILED;
 
 @Component
-public class OrderCreatedEventHandler implements EventHandler<OrderCreatedEvent, OrderPaidEvent> {
+public class OrderCreatedEventHandler implements EventHandler<OrderCreatedEvent, PaymentEvent> {
 
     private final RequestSendingService requestSendingService;
     private final PaymentService paymentService;
@@ -29,32 +29,32 @@ public class OrderCreatedEventHandler implements EventHandler<OrderCreatedEvent,
     }
 
     @Transactional
-    public OrderPaidEvent handleEvent(OrderCreatedEvent event) {
+    public PaymentEvent handleEvent(OrderCreatedEvent event) {
         logger.info("Event handling: " + event);
         try {
             Thread.sleep(3000);
-            OrderPaidEvent orderPaidEvent = OrderPaidEvent.builder()
-                    .orderId(event.getOrderId())
-                    .userId(event.getUserId())
-                    .cost(event.getCost())
-                    .products(event.getProducts())
-                    .status(PAYMENT_FAILED)
-                    .destinationAddress(event.getDestinationAddress())
-                    .authHeaderValue(event.getAuthHeaderValue())
-                    .build();
-
-            String comment = paymentService.payOrder(orderPaidEvent);
-
-            StatusDto statusDto = new StatusDto();
-            statusDto.setStatus(orderPaidEvent.getStatus());
-            statusDto.setServiceName(ServiceName.PAYMENT_SERVICE);
-            statusDto.setComment(comment);
-            requestSendingService.updateOrderStatusInOrderService(event.getOrderId(), statusDto, event.getAuthHeaderValue());
-
-            return orderPaidEvent;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+        PaymentEvent orderPaidEvent = PaymentEvent.builder()
+                .orderId(event.getOrderId())
+                .userId(event.getUserId())
+                .cost(event.getCost())
+                .products(event.getProducts())
+                .status(PAYMENT_FAILED)
+                .destinationAddress(event.getDestinationAddress())
+                .authHeaderValue(event.getAuthHeaderValue())
+                .build();
+
+        String comment = paymentService.payOrder(orderPaidEvent);
+
+        StatusDto statusDto = new StatusDto();
+        statusDto.setStatus(orderPaidEvent.getStatus());
+        statusDto.setServiceName(ServiceName.PAYMENT_SERVICE);
+        statusDto.setComment(comment);
+        requestSendingService.updateOrderStatusInOrderService(event.getOrderId(), statusDto, event.getAuthHeaderValue());
+
+        return orderPaidEvent;
     }
 
 }

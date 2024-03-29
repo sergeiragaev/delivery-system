@@ -16,7 +16,7 @@ import ru.skillbox.orderservice.domain.dto.OrderDto;
 import ru.skillbox.orderservice.domain.dto.StatusDto;
 import ru.skillbox.orderservice.exception.OrderNotFoundException;
 import ru.skillbox.orderservice.repository.OrderRepository;
-import ru.skillbox.orderservice.domain.Order;
+import ru.skillbox.orderservice.domain.model.Order;
 import ru.skillbox.orderservice.service.OrderService;
 
 import java.util.List;
@@ -36,9 +36,15 @@ public class OrderController {
         this.orderService = orderService;
     }
     @Operation(summary = "List all orders in delivery system", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping
-    public Flux<Order> getAllOrders() {
+    @GetMapping("/reactive")
+    public Flux<Order> getAllOrdersReactive() {
         return orderService.getAll();
+    }
+
+    @Operation(summary = "List all orders in delivery system", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
     @Operation(summary = "Get an order in system by id", security = @SecurityRequirement(name = "bearerAuth"))

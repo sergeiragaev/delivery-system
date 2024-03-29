@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(UserController.class)
-public class UserControllerNotAuthenticatedTest {
+class UserControllerNotAuthenticatedTest {
 
     @Autowired
     private MockMvc mvc;
@@ -43,21 +43,21 @@ public class UserControllerNotAuthenticatedTest {
     }
 
     @Test
-    public void getUser() throws Exception {
+    void getUser() throws Exception {
         mvc.perform(get("/user/Petrov"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void getAllUsers() throws Exception {
+    void getAllUsers() throws Exception {
         mvc.perform(get("/user/"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void createUser() throws Exception {
+    void createUser() throws Exception {
         Mockito.when(passwordEncoder.encode(anyString()))
                 .thenAnswer(invocation -> invocation.getArgument(0) + "_some_fake_encoding");
         User newUser = new User(
