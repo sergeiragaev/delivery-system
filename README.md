@@ -1,4 +1,4 @@
-# java_enterprise-final project
+# delivery-system (Java REST API application based on microservices choreography SAGA pattern)
 
 The project contains the following subprojects: 
 
@@ -6,10 +6,13 @@ The project contains the following subprojects:
 2. Discovery-service (combined with Config-service)
 3. Auth-service
 4. Order-service
+5. Payment-service
+6. Inventory-service
+7. Delivery-service
 
 ## Environment
 
-To run PostgreSQL with Kafka you have to execute the command in project root Report-service:
+To run PostgreSQL with Kafka you have to execute the command in project root Delivery-system:
 ```
 $sudo docker-compose up -d
 ```
@@ -20,15 +23,12 @@ http://localhost:9999/
 
 Now you can run application services from your IDE in this order 
 - Discovery
+- Gateway-service
 - Auth-service
 - Order-service
-- Gateway-service
-
-After that you can find Swagger UI of every service at URL.
-
-http://localhost:8080/some-prefix/swagger-ui/index.html
-
-Don't forget to put actual port number and prefix of service
+- Payment-service
+- Inventory-service
+- Delivery-service
 
 At Gateway, you can find joined Swagger UI
 http://localhost:9090/swagger-ui.html
