@@ -44,6 +44,8 @@ management:
     metrics:
       enabled: true
 
+order-service-url: http://localhost:9090/api/order
+
 eureka:
   client:
     serviceUrl:
