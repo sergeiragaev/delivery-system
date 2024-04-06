@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authservice.dto.UserDto;
 import ru.skillbox.authservice.repository.UserRepository;
-import ru.skillbox.authservice.security.JwtUtil;
+import ru.skillbox.authservice.security.jwt.JwtUtils;
 
 @RestController
 @RequestMapping("/token")
@@ -19,11 +19,11 @@ public class TokenController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
     private final UserRepository userRepository;
 
-    public TokenController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserRepository userRepository) {
+    public TokenController(AuthenticationManager authenticationManager, JwtUtils jwtUtil, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
