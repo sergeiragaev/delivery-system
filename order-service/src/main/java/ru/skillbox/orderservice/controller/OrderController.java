@@ -64,7 +64,7 @@ public class OrderController {
     @Operation(summary = "Add order and start delivery process for it", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     public Mono<Order> addOrder(@RequestBody OrderDto input, HttpServletRequest request) {
-        return orderService.addOrder(input, Long.valueOf(request.getHeader("id")));
+        return orderService.addOrder(input, request);
     }
 
     @Operation(summary = "Stream orders in delivery system", security = @SecurityRequirement(name = "bearerAuth"))

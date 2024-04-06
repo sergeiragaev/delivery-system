@@ -1,5 +1,6 @@
 package ru.skillbox.orderservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Mono<Order> addOrder(OrderDto orderDto, Long userId) {
+    public Mono<Order> addOrder(OrderDto orderDto, HttpServletRequest request) {
         Order newOrder = new Order(
                 orderDto.getDepartureAddress(),
                 orderDto.getDestinationAddress(),
@@ -61,7 +62,7 @@ public class OrderService {
         Order order = orderRepository.save(newOrder);
         order.addStatusHistory(order.getStatus(), ServiceName.ORDER_SERVICE, "Order created");
         log.info("Order created: " + order);
-        orderProcessor.process(order, userId);
+        orderProcessor.process(order, request);
         return Mono.just(order);
     }
 
