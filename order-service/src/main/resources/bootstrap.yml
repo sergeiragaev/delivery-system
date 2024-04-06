@@ -11,6 +11,14 @@ spring:
     config:
       uri: ${CONFIG_URI:http://localhost:8761}
       fail-fast: true
+    stream:
+      function:
+        definition: orderCreatedEventPublisher;transactionEventProcessor
+      bindings:
+        orderCreatedEventPublisher-out-0:
+          destination: orders
+        transactionEventProcessor-in-0:
+          destination: transactions
 
 eureka:
   client:
@@ -19,6 +27,9 @@ eureka:
   instance:
     preferIpAddress: true
 
+springdoc:
+  api-docs:
+    path: /order/v3/api-docs
 # could be used for debugging
 #logging:
 #  level:

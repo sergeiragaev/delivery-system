@@ -6,7 +6,7 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_MULTIPLE_DATABASES="order_db","auth_user_db" # TODO add here other databases if needed
+      - POSTGRES_MULTIPLE_DATABASES="order_db","auth_user_db","payment_db" # TODO add here other databases if needed
       - POSTGRES_USER=postgre_user
       - POSTGRES_PASSWORD=postgre_secret_password
     volumes:
@@ -14,19 +14,17 @@ services:
       - database-data:/var/lib/postgresql/data/
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
     restart: on-failure
 
+
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: wurstmeister/kafka
     ports:
-      - "9092:9092" # use this port in case you want to run application inside the docker container
-      - "9094:9094" # use this port in case you want to run applications from IDE
+      - "9092:9092"
+      - "9094:9094"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -34,7 +32,6 @@ services:
       KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_CREATE_TOPICS: "order:4:1" # TODO add other queues here if needed
     volumes:
       - kafka:/data
     restart: on-failure

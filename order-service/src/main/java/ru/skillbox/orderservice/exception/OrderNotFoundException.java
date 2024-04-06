@@ -1,4 +1,4 @@
-package ru.skillbox.orderservice.controller;
+package ru.skillbox.orderservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import ru.skillbox.orderservice.domain.Order;
-import ru.skillbox.orderservice.domain.OrderStatus;
+import ru.skillbox.orderservice.domain.enums.OrderStatus;
 import ru.skillbox.orderservice.domain.ServiceName;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,4 +1,12 @@
 spring:
+  cloud:
+    function:
+      definition: orderCreatedEventPublisher;transactionEventProcessor
+    bindings:
+      orderCreatedEventPublisher-out-0:
+        destination: orders
+      transactionEventProcessor-in-0:
+        destination: transactions
   application:
     name: order-service
   datasource:
@@ -6,6 +14,7 @@ spring:
     username: ${DATABASE_USER:postgre_user}
     password: ${DATABASE_PASSWORD:postgre_secret_password}
     driver-class-name: org.postgresql.Driver
+    maximum-pool-size: 100
   jpa:
     properties:
       hibernate:
@@ -19,8 +28,7 @@ spring:
     show-sql: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: order
-
+    topic: orders;payments;transactions
 management:
   endpoints:
     web:
@@ -41,5 +49,5 @@ eureka:
     enabled: true
 
 server:
-  port: 8080
+  port: 0
 
