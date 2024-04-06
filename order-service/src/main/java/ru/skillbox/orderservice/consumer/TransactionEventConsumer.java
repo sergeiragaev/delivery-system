@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
-import ru.skillbox.orderservice.domain.Order;
-import ru.skillbox.orderservice.domain.TransactionEvent;
+import ru.skillbox.orderservice.domain.event.TransactionEvent;
+import ru.skillbox.orderservice.domain.model.Order;
 import ru.skillbox.orderservice.repository.OrderRepository;
 
-import static ru.skillbox.orderservice.domain.enums.OrderStatus.DELIVERED;
-import static ru.skillbox.orderservice.domain.enums.OrderStatus.DELIVERY_FAILED;
+import static ru.skillbox.orderservice.domain.enums.OrderStatus.COMPLETED;
+import static ru.skillbox.orderservice.domain.enums.OrderStatus.FAILED;
 import static ru.skillbox.orderservice.domain.enums.TransactionStatus.SUCCESSFUL;
 
 
@@ -40,8 +40,8 @@ public class TransactionEventConsumer implements EventConsumer<TransactionEvent>
 
     private void setStatus(TransactionEvent transactionEvent, Order order) {
         order.setStatus(SUCCESSFUL.equals(transactionEvent.getStatus())
-                ? DELIVERED
-                : DELIVERY_FAILED);
+                ? COMPLETED
+                : FAILED);
     }
 
 }

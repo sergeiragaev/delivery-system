@@ -7,5 +7,7 @@ public enum OrderStatus {
     INVENTED,
     INVENTMENT_FAILED,
     DELIVERED,
-    DELIVERY_FAILED
+    DELIVERY_FAILED,
+    COMPLETED,
+    FAILED
 }

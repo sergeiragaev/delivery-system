@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import ru.skillbox.inventoryservice.domain.OrderProduct;
 import ru.skillbox.inventoryservice.domain.dto.ProductDto;
 import ru.skillbox.inventoryservice.domain.enums.OrderStatus;
-import ru.skillbox.inventoryservice.domain.event.OrderInventedEvent;
+import ru.skillbox.inventoryservice.domain.event.InventoryEvent;
 import ru.skillbox.inventoryservice.domain.model.Product;
+import ru.skillbox.inventoryservice.domain.model.InventsProduct;
 import ru.skillbox.inventoryservice.exception.InventoryNotFoundException;
 import ru.skillbox.inventoryservice.exception.NotEnoughInventoryException;
 import ru.skillbox.inventoryservice.repository.ProductRepository;
@@ -49,14 +49,15 @@ public class InventoryService {
     }
 
     @Transactional
-    public String inventOrder(OrderInventedEvent event) {
+    public String inventOrder(InventoryEvent event) {
         try {
-            for (OrderProduct orderProduct : event.getProducts()) {
+            for (InventsProduct orderProduct : event.getProducts()) {
                 long productId = orderProduct.getProductId();
                 Product product = productRepository.findById(productId)
-                        .orElseThrow(() -> new InventoryNotFoundException("Product with ID: " + productId + " has not found!"));
+                        .orElseThrow(() -> new InventoryNotFoundException("Product with ID=" + productId + " has not found!"));
                 deductCount(product, orderProduct.getCount());
             }
+
             return "Order invented successfully";
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -72,18 +73,11 @@ public class InventoryService {
             product.setCount(productCount - count);
             productRepository.save(product);
         } else {
-            throw new NotEnoughInventoryException("Count of product with ID: " + product.getProductId() + " is not enough!");
+            throw new NotEnoughInventoryException("Count of product with ID=" + product.getProductId() + " is not enough!");
         }
     }
 
-    public void returnOrderToInvent(OrderInventedEvent inventedEvent) {
-        List<ProductDto> productDtoList = new ArrayList<>();
-        for (OrderProduct product : inventedEvent.getProducts()) {
-            ProductDto productDto = new ProductDto();
-            productDto.setProductId(product.getProductId());
-            productDto.setCount(product.getCount());
-            productDtoList.add(productDto);
-        }
-        addProducts(productDtoList);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

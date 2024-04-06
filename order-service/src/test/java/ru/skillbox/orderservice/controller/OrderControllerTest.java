@@ -9,16 +9,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.skillbox.orderservice.domain.Order;
+import ru.skillbox.orderservice.domain.model.Order;
 import ru.skillbox.orderservice.domain.dto.OrderDto;
 import ru.skillbox.orderservice.domain.enums.OrderStatus;
 import ru.skillbox.orderservice.domain.dto.StatusDto;
 import ru.skillbox.orderservice.repository.OrderRepository;
 import ru.skillbox.orderservice.service.OrderService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(OrderController.class)
-public class OrderControllerTest {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -44,6 +47,7 @@ public class OrderControllerTest {
 
     @MockBean
     private OrderService orderService;
+
 
     @Configuration
     @ComponentScan(basePackageClasses = {OrderController.class})
@@ -55,6 +59,7 @@ public class OrderControllerTest {
     private Order newOrder;
 
     private List<Order> orders;
+    private Flux<Order> orderFlux;
 
     @BeforeEach
     public void setUp() {
@@ -74,19 +79,20 @@ public class OrderControllerTest {
         );
         orders = Collections.singletonList(order);
 
-
+        orderFlux = Flux.defer(() -> Flux.fromIterable(orders));
     }
 
     @Test
-    public void listOrders() throws Exception {
+    void listOrders() throws Exception {
         Mockito.when(orderRepository.findAll()).thenReturn(orders);
         mvc.perform(get("/order"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(order.getDescription())));
+                .andExpect(
+                        content().string(containsString(order.getDescription())));
     }
 
     @Test
-    public void listOrder() throws Exception {
+    void listOrder() throws Exception {
         Mockito.when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         mvc.perform(get("/order/1"))
                 .andExpect(status().isOk())
@@ -94,14 +100,18 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void addOrder() throws Exception {
+    void addOrder() throws Exception {
         OrderDto orderDto = new OrderDto(
                 "Order #342",
                 "Moscow, st.Taganskaya 150",
                 "Moscow, st.Dubininskaya 39",
-                2450L
+                2450L,
+                new ArrayList<>()
         );
-        Mockito.when(orderService.addOrder(orderDto, 1L)).thenReturn(Mono.just(newOrder));
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.addHeader("id", 1L);
+
+        Mockito.when(orderService.addOrder(orderDto, mockHttpServletRequest)).thenReturn(Mono.just(newOrder));
         mvc.perform(
                         post("/order")
                                 .accept(MediaType.APPLICATION_JSON)
@@ -111,11 +121,11 @@ public class OrderControllerTest {
                                 )
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void updateOrderStatus() throws Exception {
+    void updateOrderStatus() throws Exception {
         StatusDto statusDto = new StatusDto(OrderStatus.PAID);
         doNothing().when(orderService).updateOrderStatus(1L, statusDto);
         mvc.perform(
@@ -128,7 +138,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void updateOrderStatusWithError() throws Exception {
+    void updateOrderStatusWithError() throws Exception {
         StatusDto statusDto = new StatusDto(OrderStatus.PAID);
         doThrow(new RuntimeException()).when(orderService).updateOrderStatus(1L, statusDto);
         mvc.perform(

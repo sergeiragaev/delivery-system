@@ -28,7 +28,7 @@ spring:
     show-sql: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: orders;payments;transactions
+    topic: orders;transactions
 management:
   endpoints:
     web:

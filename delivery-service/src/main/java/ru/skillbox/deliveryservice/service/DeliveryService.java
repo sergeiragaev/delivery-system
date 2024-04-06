@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.skillbox.deliveryservice.domain.enums.OrderStatus;
-import ru.skillbox.deliveryservice.domain.event.OrderDeliveredEvent;
+import ru.skillbox.deliveryservice.domain.event.DeliveryEvent;
 import ru.skillbox.deliveryservice.domain.model.Delivery;
 import ru.skillbox.deliveryservice.exception.DeliveryNotFoundException;
 import ru.skillbox.deliveryservice.exception.FailedDeliveryException;
@@ -23,11 +23,7 @@ public class DeliveryService {
         this.deliveryRepository = deliveryRepository;
     }
 
-    public String deliverOrder(OrderDeliveredEvent event) {
-        Delivery delivery = new Delivery();
-        delivery.setOrderId(event.getOrderId());
-        delivery.setDestinationAddress(event.getDestinationAddress());
-        deliveryRepository.save(delivery);
+    public String deliverOrder(DeliveryEvent event) {
 
         try {
             double randomValue = Math.round(Math.random() * 100.0) / 100.0;
@@ -36,6 +32,12 @@ public class DeliveryService {
                 event.setStatus(OrderStatus.DELIVERY_FAILED);
                 throw new FailedDeliveryException(comment);
             }
+
+            Delivery delivery = new Delivery();
+            delivery.setOrderId(event.getOrderId());
+            delivery.setDestinationAddress(event.getDestinationAddress());
+            deliveryRepository.save(delivery);
+
             return "The order delivers successfully";
         } catch (Exception e) {
             log.error(e.getMessage());

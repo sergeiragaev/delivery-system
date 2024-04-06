@@ -2,9 +2,8 @@ package ru.skillbox.orderservice.domain.dto;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
-import ru.skillbox.orderservice.domain.OrderProduct;
+import ru.skillbox.orderservice.domain.model.OrderProduct;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

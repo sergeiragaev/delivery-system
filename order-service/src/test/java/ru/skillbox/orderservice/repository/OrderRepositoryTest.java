@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
-import ru.skillbox.orderservice.domain.Order;
+import ru.skillbox.orderservice.domain.model.Order;
 import ru.skillbox.orderservice.domain.enums.OrderStatus;
 import ru.skillbox.orderservice.domain.ServiceName;
 
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class OrderRepositoryTest {
+class OrderRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -22,7 +22,7 @@ public class OrderRepositoryTest {
     private OrderRepository orderRepositoryJpa;
 
     @Test
-    public void whenGetByDescription_thenReturnOrder() {
+    void whenGetByDescription_thenReturnOrder() {
         Order order = new Order(
                 "Moscow, st.Taganskaya 150",
                 "Moscow, st.Tulskaya 24",
@@ -41,8 +41,8 @@ public class OrderRepositoryTest {
                 .isEqualTo(order.getDepartureAddress());
         assertThat(gotOrder.getStatus())
                 .isEqualTo(order.getStatus());
-        assertThat(gotOrder.getOrderStatusHistory().size())
-                .isEqualTo(1);
+        assertThat(gotOrder.getOrderStatusHistory())
+                .hasSize(1);
 
         // test order status change
         gotOrder.setStatus(OrderStatus.PAID);
@@ -52,7 +52,7 @@ public class OrderRepositoryTest {
         gotOrder = orderRepositoryJpa.findByDescription(desc).get();
         assertThat(gotOrder.getStatus())
                 .isEqualTo(OrderStatus.PAID);
-        assertThat(orderRepositoryJpa.findOrderStatusHistoryById(gotOrder.getId()).size())
-                .isEqualTo(2);
+        assertThat(orderRepositoryJpa.findOrderStatusHistoryById(gotOrder.getId()))
+                .hasSize(2);
     }
 }

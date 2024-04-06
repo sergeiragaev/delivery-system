@@ -12,14 +12,18 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: orderEventProcessor;inventoryEventProcessor
+        definition: orderEventProcessor;paymentEventSubscriber;transactionEventSubscriber
       bindings:
         orderEventProcessor-in-0:
           destination: orders
         orderEventProcessor-out-0:
           destination: payments
-        inventoryEventProcessor-in-0:
-          destination: invents
+        paymentEventSubscriber-in-0:
+          destination: payments
+        paymentEventSubscriber-out-0:
+          destination: transactions
+        transactionEventSubscriber-in-0:
+          destination: transactions
 
 eureka:
   client:

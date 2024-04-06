@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Sinks;
-import ru.skillbox.orderservice.domain.Order;
-import ru.skillbox.orderservice.domain.OrderCreatedEvent;
+import ru.skillbox.orderservice.domain.model.Order;
+import ru.skillbox.orderservice.domain.event.OrderCreatedEvent;
 
 @Component
 public class OrderProcessor {
@@ -18,10 +18,9 @@ public class OrderProcessor {
     }
 
     public void process(Order order, HttpServletRequest request) {
-        long userId = Long.parseLong(request.getHeader("id"));
         OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(order.getId())
-                .userId(userId)
+                .userId(Long.parseLong(request.getHeader("id")))
                 .cost(order.getCost())
                 .products(order.getProducts())
                 .destinationAddress(order.getDestinationAddress())

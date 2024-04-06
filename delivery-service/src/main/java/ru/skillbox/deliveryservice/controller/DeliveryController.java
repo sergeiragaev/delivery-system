@@ -23,11 +23,12 @@ public class DeliveryController {
     }
 
     @Operation(summary = "Remove delivery by id.", security = @SecurityRequirement(name = "bearerAuth"))
-    @DeleteMapping("/delivery/{deliveryId}")
+    @DeleteMapping("/{deliveryId}")
     public ResponseEntity<Void> deleteDeliverById(@PathVariable @Parameter(description = "Id of delivery") long deliveryId)
             throws DeliveryNotFoundException {
 
         deliveryService.deleteDeliveryById(deliveryId);
         return ResponseEntity.ok().build();
     }
+
 }

@@ -1,20 +1,18 @@
 spring:
   cloud:
     function:
-      definition: orderPaidEventProcessor;orderDeliveredEventProcessor
-      bindings:
-        orderPaidEventProcessor-in-0:
-          destination: payments
-        orderPaidEventProcessor-out-0:
-          destination: invents
-        orderDeliveredEventProcessor-in-0:
-          destination: delivers
-        orderDeliveredEventProcessor-out-0:
-          destination: invents
-#      paymentEventSubscriber-in-0:
-#        destination: payments
-#      paymentEventSubscriber-out-0:
-#        destination: transactions
+      definition: orderPaidEventProcessor;inventoryEventSubscriber;transactionEventSubscriber
+    bindings:
+      orderPaidEventProcessor-in-0:
+        destination: payments
+      orderPaidEventProcessor-out-0:
+        destination: invents
+      inventoryEventSubscriber-in-0:
+        destination: invents
+      inventoryEventSubscriber-out-0:
+        destination: transactions
+      transactionEventSubscriber-in-0:
+        destination: transactions
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/inventory_db}
     username: ${DATABASE_USER:postgre_user}
@@ -34,7 +32,7 @@ spring:
     show-sql: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: orders;payments;transactions
+    topic: invents;payments
 management:
   endpoints:
     web:
@@ -48,7 +46,7 @@ management:
     metrics:
       enabled: true
 
-order-service-url: http://localhost:9090/api/order
+order-service-url: ${ORDER_SERVER_URL:http://localhost:9090/api/order}
 
 eureka:
   client:

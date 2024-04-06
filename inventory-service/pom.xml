@@ -108,7 +108,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.13</version>
                 <configuration>
-                    <repository>delivery/payment-service</repository>
+                    <repository>delivery/inventory-service</repository>
                 </configuration>
             </plugin>
         </plugins>
