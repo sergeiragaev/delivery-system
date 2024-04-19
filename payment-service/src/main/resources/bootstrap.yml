@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /api
+    context-path: /api/payment
 spring:
   application:
     name: payment-service
@@ -34,7 +34,7 @@ eureka:
 
 springdoc:
   api-docs:
-    path: /payment/v3/api-docs
+    path: /v3/api-docs
 
 # could be used for debugging
 #logging:

@@ -12,7 +12,6 @@ import ru.skillbox.deliveryservice.service.DeliveryService;
 
 @Slf4j
 @RestController
-@RequestMapping("/delivery")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;

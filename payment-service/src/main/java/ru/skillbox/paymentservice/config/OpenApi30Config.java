@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "Payments API", version = "v1"),
-        servers = {@Server(url = "http://localhost:9090/api"), @Server(url = "http://localhost:8081/api")})
+        servers = {@Server(url = "http://localhost:9090/api/payment"), @Server(url = "http://localhost:8081/api/payment")})
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,
