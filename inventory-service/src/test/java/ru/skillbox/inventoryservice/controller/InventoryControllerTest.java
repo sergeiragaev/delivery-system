@@ -70,7 +70,7 @@ class InventoryControllerTest {
 
         Mockito.when(inventoryService.addProducts(Collections.singletonList(productDto))).thenReturn(products);
         mvc.perform(
-                        post("/inventory/products")
+                        post("/products")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         "[{\"productId\":1,\"count\":10}]"
@@ -85,7 +85,7 @@ class InventoryControllerTest {
     @Test
     void listProducts() throws Exception {
         Mockito.when(inventoryService.getAllProducts()).thenReturn(products);
-        mvc.perform(get("/inventory/products"))
+        mvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().string(containsString(String.valueOf(product.getCount()))));
@@ -94,12 +94,12 @@ class InventoryControllerTest {
     @Test
     void getProductById() throws Exception {
         Mockito.when(productRepository.findProductByProductId(1L)).thenReturn(Optional.of(product));
-        mvc.perform(get("/inventory/products/1"))
+        mvc.perform(get("/products/1"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().string(containsString(String.valueOf(product.getCount()))));
 
-        mvc.perform(get("/inventory/products/2"))
+        mvc.perform(get("/products/2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         content().string(containsString(String.valueOf(newProduct.getProductId()))));

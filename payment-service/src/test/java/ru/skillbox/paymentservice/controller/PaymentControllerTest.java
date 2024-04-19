@@ -71,7 +71,7 @@ class PaymentControllerTest {
 
         Mockito.when(paymentService.fillBalance(1L, sumDto)).thenReturn(userBalance);
         mvc.perform(
-                        post("/payment/balance")
+                        post("/balance")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         "{\"sum\":1500}"
@@ -86,7 +86,7 @@ class PaymentControllerTest {
     @Test
     void listBalances() throws Exception {
         Mockito.when(userBalanceRepository.findAll()).thenReturn(balances);
-        mvc.perform(get("/payment/balance"))
+        mvc.perform(get("/balance"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().string(containsString(newUserBalance.getBalance().toString())));
@@ -95,12 +95,12 @@ class PaymentControllerTest {
     @Test
     void getBalanceByUserId() throws Exception {
         Mockito.when(userBalanceRepository.findByUserId(1L)).thenReturn(Optional.of(userBalance));
-        mvc.perform(get("/payment/balance/1"))
+        mvc.perform(get("/balance/1"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().string(containsString(userBalance.getBalance().toString())));
 
-        mvc.perform(get("/payment/balance/2"))
+        mvc.perform(get("/balance/2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         content().string(containsString(userBalance.getUserId().toString())));

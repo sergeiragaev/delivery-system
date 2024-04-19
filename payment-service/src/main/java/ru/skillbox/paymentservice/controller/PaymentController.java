@@ -18,7 +18,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/payment")
 public class PaymentController {
 
     private final PaymentService paymentService;

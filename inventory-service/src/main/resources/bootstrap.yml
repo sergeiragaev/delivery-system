@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /api
+    context-path: /api/inventory
 spring:
   application:
     name: inventory-service
@@ -34,7 +34,7 @@ eureka:
 
 springdoc:
   api-docs:
-    path: /inventory/v3/api-docs
+    path: /v3/api-docs
 # could be used for debugging
 #logging:
 #  level:
