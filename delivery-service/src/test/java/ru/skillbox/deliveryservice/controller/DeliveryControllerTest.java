@@ -36,7 +36,7 @@ class DeliveryControllerTest {
         doThrow(new DeliveryNotFoundException("Delivery with ID 1 not found."))
                 .when(deliveryService).deleteDeliveryById(1L);
         mvc.perform(
-                        delete("/delivery/1")
+                        delete("/1")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -47,7 +47,7 @@ class DeliveryControllerTest {
     void deleteDeliverByIdSuccessTest() throws Exception {
         doNothing().when(deliveryService).deleteDeliveryById(1L);
         mvc.perform(
-                        delete("/delivery/1")
+                        delete("/1")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
